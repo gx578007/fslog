@@ -70,6 +70,8 @@ Configurations can be passed by the following way:
    var fslog = require('fslog')(config);     
 ```
 
+Available fields of configuration are listed as follows.
+
 ### "section"
    Specify a section for `fslog.debuglog` to conditionally writes logs and stdout. 
    If this is not specified, `fslog.debug` is a no-op function.

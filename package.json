@@ -1,7 +1,7 @@
 {
   "name": "fslog",
-  "version": "0.8.0",
-  "description": "Output log to file and automatically remove outdated logs",
+  "version": "0.8.1",
+  "description": "a light node.js logging API",
   "main": "fslog.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,6 +12,7 @@
   },
   "keywords": [
     "log",
+    "log rotation",
     "file",
     "fs"
   ],
