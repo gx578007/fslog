@@ -42,7 +42,7 @@ A simple example to use `fslog.debuglog`.
     // The prefix of each log file will be `exampleLog`.
     var fslog = require("fslog")({
       section: 'example',
-      retention: true, 
+      retentionCheck: true, 
       retentionMinutes: 60*24*7,
       logdir: 'logs',
       logname: 'exampleLog'
