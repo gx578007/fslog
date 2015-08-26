@@ -64,6 +64,12 @@ A simple example to use `fslog.debuglog`.
 
 ## Configurations 
 
+Configurations can be passed by the following way:
+```js
+   var config = {section:'example'};
+   var fslog = require('fslog')(config);     
+```
+
 ### "section"
    Specify a section for `fslog.debuglog` to conditionally writes logs and stdout. 
    If this is not specified, `fslog.debug` is a no-op function.

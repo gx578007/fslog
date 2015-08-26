@@ -1,6 +1,6 @@
 {
   "name": "fslog",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "description": "Output log to file and automatically remove outdated logs",
   "main": "fslog.js",
   "scripts": {
