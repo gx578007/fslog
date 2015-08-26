@@ -5,7 +5,9 @@ var path = require('path');
 /**
  * options: { 
  *   section:'...', 
- *   retention: in minutes,
+ *   retentionMinutes: in minutes,
+ *   retentionCheckInterval: 
+ *   retention: true|false
  *   logdir: directory,
  *   logname: file name (%DATE: use date string as log name),
  * }
@@ -21,7 +23,9 @@ function fslog(options){
 
   options = options || {};
   var _section = options.section || null;
-  var _retention = options.retention || 60*24*7;
+  var _retentionCheck = options.retentionCheck || false;
+  var _retentionMinutes = options.retentionMinutes || 60*24*7;
+  var _retentionCheckInterval = options.retentionCheckInterval || _retentionMinutes*60*1000;
   var _logname = options.logname || '%DATE';
   var _logdir = options.logdir || '';
   var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_section)>=0;
@@ -29,9 +33,12 @@ function fslog(options){
 
   var _oneday = 1000*60*60*24;
 
-  var _cleanHdl = setInterval(function(){
-    _removeOutdatedLogs();
-  },_retention*60*1000);
+  var _cleanHdl = null;
+  if (_retentionCheck){
+     _cleanHdl = setInterval(function(){
+       _removeOutdatedLogs();
+     },_retentionCheckInterval);
+  }
 
   function log(){
      var rst = '[[' + _timeStr() + ']]  ';
@@ -45,20 +52,21 @@ function fslog(options){
      fs.appendFile(_filename(),rst,function(err){ if (err) console.log(err)} );
      console.log.apply(null,arguments); 
   }
-  function debug(){
+  function debuglog(){
     if (_debugMode)
       log.apply(this,arguments);
   }
   function destroy(){
-    clearInterval(_cleanHdl);
-    _cleanHdl = null;
+     if (_cleanHdl)
+       clearInterval(_cleanHdl);
+     _cleanHdl = null;
   }
 
   function _removeOutdatedLogs(){
     var now = Date.now();
     var tsarr = Object.keys(_fileMapping);
     tsarr.forEach(function(ts,i,arr){
-      if (now-ts>_retention){
+      if (now-ts>_retentionMinutes*60*1000){
         fs.unlink(_fileMapping[ts],function(err){
           if (err) return console.error('[Error] Failed to remove outdated log\n',err);
         });

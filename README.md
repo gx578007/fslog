@@ -42,7 +42,8 @@ A simple example to use `fslog.debuglog`.
     // The prefix of each log file will be `exampleLog`.
     var fslog = require("fslog")({
       section: 'example',
-      retention: 60*24*7,
+      retention: true, 
+      retentionMinutes: 60*24*7,
       logdir: 'logs',
       logname: 'exampleLog'
     });
@@ -77,8 +78,19 @@ Available fields of configuration are listed as follows.
    If this is not specified, `fslog.debug` is a no-op function.
    Default: ''
 
-### "retention"
+### "retentionCheck"
+   If true, periodically remove expired logs.
+   If false, logs will be kept forever.
+   Default: false 
+
+### "retentionMinutes"
    Specify the lifetime to keep each log. Unit is in `minutes`.
+   This takes effect when `retention` is set to true.
+   Default: 60*24*7 minutes (7 days)
+
+### "retentionCheckInterval"
+   Specify the interval to check expired logs. 
+   This takes effect when `retention` is set to true.
    Default: 60*24*7 minutes (7 days)
 
 ### "logdir"
