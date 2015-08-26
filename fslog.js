@@ -4,7 +4,7 @@ var path = require('path');
 
 /**
  * options: { 
- *   namespace:'...', 
+ *   section:'...', 
  *   retention: in minutes,
  *   logdir: directory,
  *   logname: file name (%DATE: use date string as log name),
@@ -12,7 +12,7 @@ var path = require('path');
  */
 function fslog(options){
   this.log = log;
-  this.debug = debug;
+  this.debuglog = debuglog;
   this.destroy = destroy;
 
   var _now = _nowAlignToDay();
@@ -20,11 +20,12 @@ function fslog(options){
   var _fileMapping = {};
 
   options = options || {};
-  var _namespace = options.namespace || null;
+  var _section = options.section || null;
   var _retention = options.retention || 60*24*7;
   var _logname = options.logname || '%DATE';
   var _logdir = options.logdir || '';
-  var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_namespace)>=0;
+  var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_section)>=0;
+  if (_debugMode) this.debuglog = function(){}; //no-op
 
   var _oneday = 1000*60*60*24;
 

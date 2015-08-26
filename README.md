@@ -32,46 +32,63 @@ A log file with date-formatted name will be generated. For example, file `201508
 
     1 '1' [ 1, '2', 3 ] { a: 1 }
 
-A simple example to use `fslog.debug`.
+A simple example to use `fslog.debuglog`.
 
 ```js
     // Apply user-specified settings of fslog
     // Log messages only when environment variable `NODE_DEBUG` contains `example`.
-    // Automatically remove logs of seven days before
-    // Logs will be put under the directory `logs`
+    // Automatically remove logs of seven days before.
+    // Logs will be put under the directory `logs`.
     // The prefix of each log file will be `exampleLog`.
     var fslog = require("fslog")({
-      namespace: 'example',
+      section: 'example',
       retention: 60*24*7,
       logdir: 'logs',
       logname: 'exampleLog'
     });
 
-    // Use fslog.debug like `util.debug`
+    // Use `fslog.debuglog` like `util.debuglog`
     // Do log messages only when environment variable `NODE_DEBUG` contains `example`. 
-    fslog.debug(str,num,arr,obj);
+    fslog.debuglog(str,num,arr,obj);
 ```
 
 # API
 ## log
+   Interface is similar to `console.log`. It write logs to both files and stdout.
 
-## debug
+## debuglog
+   Interface is similar to `util.debuglog`. If a `NODE_DEBUG` environment variable matches the specified section, it will write logs to files and stdout. If not, it is a no-op function.
 
 ## destroy
+   This will destroy automatical log removal processes.
 
 ## Configurations 
 
-### "namespace"
+### "section"
+   Specify a section for `fslog.debuglog` to conditionally writes logs and stdout. 
+   If this is not specified, `fslog.debug` is a no-op function.
+   Default: ''
+
 ### "retention"
+   Specify the lifetime to keep each log. Unit is in `minutes`.
+   Default: 60*24*7 minutes (7 days)
+
 ### "logdir"
+   Specify the directory to put log files.
+   Default: ''
+
 ### "logname"
+   Specify the naming of log files. 
+   For example, if `logname` is specified as `example`, log files will be named with a incremental counter:
+   `example.0`, `example.1`, `example.2`, ...
+   Default: '' (Use date as names)
 
 ## Contributors
 Bo-Han Wu (researchgary@gmail.com)
 
 ## LICENSE - "MIT License"
 
-Copyright (c) 2015 Bo-Han Wu 
+Copyright (c) 2015 Bo-Han Wu (researchgary@gmail.com)
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
