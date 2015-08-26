@@ -9,11 +9,11 @@ Install with:
 
 ## Usage
 
-Simple example
+A simple example to use `fslog.log`.
 
 ```js
-    // Apply default setting of fslog
-    var fslog = require("fslog")(),
+    // Apply default settings of fslog
+    var fslog = require("fslog")();
 
     // Use fslog.log like console.log
     // Not support format specifier (such as %s, %d ...)
@@ -28,11 +28,36 @@ This will display:
 
     1 '1' [ 1, '2', 3 ] { a: 1 }
 
-Note that the API is entire asynchronous. To get data back from the server,
-you'll need to use a callback. The return value from most of the API is a
-backpressure indicator.
+A log file with date-formatted name will be generated. For example, file `20150803.0` is generated. Its content will be:
 
-### 
+    1 '1' [ 1, '2', 3 ] { a: 1 }
+
+A simple example to use `fslog.debug`.
+
+```js
+    // Apply user-specified settings of fslog
+    // Log messages only when environment variable `NODE_DEBUG` contains `example`.
+    // Automatically remove logs of seven days before
+    // Logs will be put under the directory `logs`
+    // The prefix of each log file will be `exampleLog`.
+    var fslog = require("fslog")({
+      namespace: 'example',
+      retention: 60*24*7,
+      logdir: 'logs',
+      logname: 'exampleLog'
+    });
+
+    // Use fslog.debug like `util.debug`
+    // Do log messages only when environment variable `NODE_DEBUG` contains `example`. 
+    fslog.debug(str,num,arr,obj);
+```
+
+# API
+## log
+
+## debug
+
+## destroy
 
 ## Configurations 
 
@@ -46,7 +71,7 @@ Bo-Han Wu (researchgary@gmail.com)
 
 ## LICENSE - "MIT License"
 
-Copyright (c) 2010 Matthew Ranney, http://ranney.com/
+Copyright (c) 2015 Bo-Han Wu 
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation

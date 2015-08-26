@@ -72,8 +72,10 @@ function fslog(options){
   function _getCurrentFile(){
     var now = _nowAlignToDay();
     var file = _fileMapping[now];
-    if (!file)
+    if (!file){
+      ++_cnt;
       _fileMapping[now] = _filename(); 
+    }
     return _fileMapping[now]; 
   }
   function _filename(){ 
