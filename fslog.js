@@ -103,7 +103,7 @@ function fslog(options){
 }
 
 function fslogInstance(options){
-  return new fslog(options);
+   return new fslog(options);
 }
 
 module.exports = fslogInstance;

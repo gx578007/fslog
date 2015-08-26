@@ -1,0 +1,24 @@
+{
+  "name": "fslog",
+  "version": "0.7.9",
+  "description": "Output log to file and automatically remove outdated logs",
+  "main": "fslog.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gx578007/fslog.git"
+  },
+  "keywords": [
+    "log",
+    "file",
+    "fs"
+  ],
+  "author": "Bo-Han Wu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gx578007/fslog/issues"
+  },
+  "homepage": "https://github.com/gx578007/fslog"
+}
