@@ -112,7 +112,7 @@ Available fields of configuration are listed as follows.
 
 ### "withtime"
    If it is set to true, a timestamp will be embedded into the head of each log message when logging.
-   <br>Default: false.
+   <br>Default: **false**.
 
 ### "logname"
    Specify the naming of log files. 
