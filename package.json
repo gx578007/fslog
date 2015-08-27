@@ -1,6 +1,6 @@
 {
   "name": "fslog",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "a light node.js logging API",
   "main": "fslog.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "keywords": [
     "log",
-    "log rotation",
+    "rotation",
     "file",
     "fs"
   ],

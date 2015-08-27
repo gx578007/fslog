@@ -21,17 +21,18 @@ function fslog(options){
   var _cnt = 0;
   var _fileMapping = {};
 
+  var _oneday = 1000*60*60*24;
+
   options = options || {};
   var _section = options.section || null;
   var _retentionCheck = options.retentionCheck || false;
   var _retentionMinutes = options.retentionMinutes || 60*24*7;
-  var _retentionCheckInterval = options.retentionCheckInterval || _retentionMinutes*60*1000;
+  var _retentionCheckInterval = options.retentionCheckInterval || _oneday; 
   var _logname = options.logname || '%DATE';
   var _logdir = options.logdir || '';
   var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_section)>=0;
   if (_debugMode) this.debuglog = function(){}; //no-op
 
-  var _oneday = 1000*60*60*24;
 
   var _cleanHdl = null;
   if (_retentionCheck){

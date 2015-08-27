@@ -58,7 +58,7 @@ A simple example to use `fslog.debuglog`.
    Interface is similar to `console.log`. It write logs to both files and stdout.
 
 ## debuglog
-   Interface is similar to `util.debuglog`. If a `NODE_DEBUG` environment variable matches the specified section, it will write logs to files and stdout. If not, it is a no-op function.
+   Interface is similar to `util.debuglog`. If environment variable "NODE_DEBUG" matches the specified section, it will write logs to files and stdout. If not, it is a no-op function.
 
 ## destroy
    This will destroy automatical log removal processes.
@@ -84,14 +84,14 @@ Available fields of configuration are listed as follows.
    Default: false 
 
 ### "retentionMinutes"
-   Specify the lifetime to keep each log. Unit is in `minutes`.
+   Specify the lifetime to keep each log. Unit is in "minutes".
    This takes effect when `retention` is set to true.
-   Default: 60*24*7 minutes (7 days)
+   Default: 10080 minutes (7 days)
 
 ### "retentionCheckInterval"
    Specify the interval to check expired logs. 
    This takes effect when `retention` is set to true.
-   Default: 60*24*7 minutes (7 days)
+   Default: 1440 minutes (1 day)
 
 ### "logdir"
    Specify the directory to put log files.
@@ -99,9 +99,9 @@ Available fields of configuration are listed as follows.
 
 ### "logname"
    Specify the naming of log files. 
-   For example, if `logname` is specified as `example`, log files will be named with a incremental counter:
-   `example.0`, `example.1`, `example.2`, ...
-   Default: '' (Use date as names)
+   For example, if `logname` is specified as "example", log files will be named with an incremental counter:
+   "example.0", "example.1", "example.2", ...
+   Default: '' (Use date-formated string "YYYYMMDD" to represent today.)
 
 ## Contributors
 Bo-Han Wu (researchgary@gmail.com)
