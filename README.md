@@ -1,7 +1,7 @@
 fslog - a light node.js logging API 
 ===========================
 
-Similar to `console.log`, `fslog` output message to both log files and stdout. Also, `fslog` is able to automatically perform log rotation to remove expired logs (disabled by default).
+Similar to `console.log`, `fslog` logs message to both "files" and "stdout". Also, `fslog` is able to automatically perform log rotation to remove expired logs (disabled by default).
 
 Install with:
 
@@ -16,12 +16,14 @@ A simple example to use `fslog.log`.
     var fslog = require("fslog")();
 
     // Use fslog.log like console.log
+    // Use fslog.error like console.error
     // Not support format specifier (such as %s, %d ...)
     var obj = {a:1};
     var arr = [1,'2',3];
     var num = 1;
     var str = '1'
     fslog.log(str,num,arr,obj);
+    fslog.error(str,num,arr,obj);
 ```
 
 This will display:
@@ -55,7 +57,10 @@ A simple example to use `fslog.debuglog`.
 
 # API
 ## log
-   Interface is similar to `console.log`. It write logs to both files and stdout.
+   Interface is similar to `console.log`. It writes logs to both "files" and "stdout".
+
+## error 
+   Interface is similar to `console.error`. It writes logs to both "files" and "stderr".
 
 ## debuglog
    Interface is similar to `util.debuglog`. If environment variable "NODE_DEBUG" matches the specified section, it will write logs to files and stdout. If not, it is a no-op function.
@@ -80,27 +85,31 @@ Available fields of configuration are listed as follows.
 ### "retentionCheck"
    If true, periodically remove expired logs.
    If false, logs will be kept forever.
-   Default: false 
+   Default: false.
 
 ### "retentionMinutes"
    Specify the lifetime to keep each log. Unit is in "minutes".
    This takes effect when `retention` is set to true.
-   Default: 10080 minutes (7 days)
+   Default: 10080 minutes (7 days).
 
 ### "retentionCheckInterval"
    Specify the interval to check expired logs. 
    This takes effect when `retention` is set to true.
-   Default: 1440 minutes (1 day)
+   Default: 1440 minutes (1 day).
 
 ### "logdir"
    Specify the directory to put log files.
    Default: "./"
 
+### "withtime"
+   If it is set to true, a timestamp will be embedded into the head of each log message when logging.
+   Default: false.
+
 ### "logname"
    Specify the naming of log files. 
    For example, if `logname` is specified as "example", log files will be named with an incremental counter:
    "example.0", "example.1", "example.2", ...
-   Default: (Use date-formated string "YYYYMMDD.x" to represent today.)
+   Default: (Use date-formated string "YYYYMMDD.x" to represent today).
 
 ## Contributors
 Bo-Han Wu (researchgary@gmail.com)
