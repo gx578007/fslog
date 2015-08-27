@@ -30,7 +30,7 @@ This will display:
 
     1 '1' [ 1, '2', 3 ] { a: 1 }
 
-A log file with date-formatted name (fslog-YYYYMMDD.x) will be generated. For example, file "fslog-20150803.0" is generated. Its content will be:
+A log file with date-formatted name will be generated. For example, logs are written to the file "fslog-20150803.0" is generated. Its content will be:
 
     1 '1' [ 1, '2', 3 ] { a: 1 }
 
@@ -88,37 +88,38 @@ Available fields of configuration are listed as follows.
    1. "*file*": output logs only to files.
    2. "*console*": output logs only to console such as "stderr" or "stdout".
    3. "*both*": output logs to both files and console.
-   <br>
-   Default: "*both*"
+
+<br>Default: "*both*"
 
 ### "retentionCheck"
    If true, periodically remove expired logs.
    If false, logs will be kept forever.
-   Default: false.
+   <br>Default: **false**.
 
 ### "retentionMinutes"
    Specify the lifetime to keep each log. Unit is in "minutes".
    This takes effect when `retention` is set to true.
-   Default: 10080 minutes (7 days).
+   <br>Default: 10080 minutes (7 days).
 
 ### "retentionCheckInterval"
    Specify the interval to check expired logs. 
    This takes effect when `retention` is set to true.
-   Default: 1440 minutes (1 day).
+   <br>Default: 1440 minutes (1 day).
 
 ### "logdir"
    Specify the directory to put log files.
-   Default: "./"
+   <br>Default: "**./**"
 
 ### "withtime"
    If it is set to true, a timestamp will be embedded into the head of each log message when logging.
-   Default: false.
+   <br>Default: false.
 
 ### "logname"
    Specify the naming of log files. 
    For example, if `logname` is specified as "example", log files will be named with an incremental counter:
    "example.0", "example.1", "example.2", ...
-   Default: (Use date-formated string "fslog-YYYYMMDD.x" to represent today).
+   Otherwise, date-formatted names "fslog-YYYYMMDD.x" ("fslog-" is prefix) are applied to write logs day by day. 
+   <br>Default: (Use date-formatted string "fslog-YYYYMMDD.x" for ).
 
 ## Contributors
 Bo-Han Wu (researchgary@gmail.com)
