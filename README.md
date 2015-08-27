@@ -76,7 +76,6 @@ Available fields of configuration are listed as follows.
 ### "section"
    Specify a section for `fslog.debuglog` to conditionally writes logs and stdout. 
    If this is not specified, `fslog.debug` is a no-op function.
-   Default: ''
 
 ### "retentionCheck"
    If true, periodically remove expired logs.
@@ -95,13 +94,13 @@ Available fields of configuration are listed as follows.
 
 ### "logdir"
    Specify the directory to put log files.
-   Default: ''
+   Default: "./"
 
 ### "logname"
    Specify the naming of log files. 
    For example, if `logname` is specified as "example", log files will be named with an incremental counter:
    "example.0", "example.1", "example.2", ...
-   Default: '' (Use date-formated string "YYYYMMDD" to represent today.)
+   Default: (Use date-formated string "YYYYMMDD" to represent today.)
 
 ## Contributors
 Bo-Han Wu (researchgary@gmail.com)
