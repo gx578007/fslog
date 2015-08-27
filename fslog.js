@@ -11,6 +11,7 @@ var path = require('path');
  *   logdir: directory,
  *   logname: file name (%DATE: use date string as log name),
  *   withtime: true|false
+ *   destination: 'file'|'console'|'both'
  * }
  */
 function fslog(options){
@@ -35,7 +36,12 @@ function fslog(options){
   var _logname = options.logname || '%DATE';
   var _logdir = options.logdir || '';
   var _withtime = options.withtime || false;
+  var _destination = (options.destination || 'both').toLowerCase();
+
   var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_section)>=0;
+
+  var _tofile = (_destination==='both' || _destination==='file') ? fs.appendFile : noop;
+  var _console = (_destination==='both' || _destination==='console') ? console : {log:noop,error:noop}; 
 
   if (_debugMode) this.debuglog = noop; 
 
@@ -49,14 +55,14 @@ function fslog(options){
 
   function log(){
      var rst = _generateOutputString(arguments); 
-     fs.appendFile(_filename(),rst+'\n',function(err){ if (err) console.error(err)} );
-     console.log.apply(null,[rst]); 
+     _tofile(_filename(),rst+'\n',function(err){ if (err) console.error(err)} );
+     _console.log.apply(null,[rst]); 
   }
 
   function error(){
      var rst = _generateOutputString(arguments); 
-     fs.appendFile(_filename(),rst+'\n',function(err){ if (err) console.error(err)} );
-     console.error.apply(null,[rst]); 
+     _tofile(_filename(),rst+'\n',function(err){ if (err) console.error(err)} );
+     _console.error.apply(null,[rst]); 
   }
 
   function debuglog(){

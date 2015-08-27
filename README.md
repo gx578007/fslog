@@ -82,6 +82,15 @@ Available fields of configuration are listed as follows.
    Specify a section for `fslog.debuglog` to conditionally writes logs and stdout. 
    If this is not specified, `fslog.debug` is a no-op function.
 
+### "destination"
+   Specify the way to store logs. Three values are available to be set:
+   <br>
+   1. "*file*": output logs only to files.
+   2. "*console*": output logs only to console such as "stderr" or "stdout".
+   3. "*both*": output logs to both files and console.
+   <br>
+   Default: "*both*"
+
 ### "retentionCheck"
    If true, periodically remove expired logs.
    If false, logs will be kept forever.
