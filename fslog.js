@@ -25,6 +25,8 @@ function fslog(options){
 
   var _oneday = 1000*60*60*24;
 
+  var noop = function(){};
+
   options = options || {};
   var _section = options.section || null;
   var _retentionCheck = options.retentionCheck || false;
@@ -35,7 +37,7 @@ function fslog(options){
   var _withtime = options.withtime || false;
   var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_section)>=0;
 
-  if (_debugMode) this.debuglog = function(){}; //no-op
+  if (_debugMode) this.debuglog = noop; 
 
 
   var _cleanHdl = null;
@@ -106,7 +108,7 @@ function fslog(options){
   }
   function _filename(){ 
     if (_logname==='%DATE')
-      return path.join(_logdir,_dateStr()+'.'+_cnt);
+      return path.join(_logdir,'fslog-'+_dateStr()+'.'+_cnt);
     return path.join(_logdir,_logname+'.'+_cnt); 
   }
 

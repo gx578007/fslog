@@ -1,7 +1,7 @@
 fslog - a light node.js logging API 
 ===========================
 
-Similar to `console.log`, `fslog` logs message to both "files" and "stdout". Also, `fslog` is able to automatically perform log rotation to remove expired logs (disabled by default).
+Similar to `console.log`, `fslog` logs message to both "files" and "stdout". The logs within the same day will be written in the same file. Also, `fslog` is able to automatically perform log rotation to remove expired logs (disabled by default).
 
 Install with:
 
@@ -30,7 +30,7 @@ This will display:
 
     1 '1' [ 1, '2', 3 ] { a: 1 }
 
-A log file with date-formatted name (YYYYMMDD.x) will be generated. For example, file "20150803.0" is generated. Its content will be:
+A log file with date-formatted name (fslog-YYYYMMDD.x) will be generated. For example, file "fslog-20150803.0" is generated. Its content will be:
 
     1 '1' [ 1, '2', 3 ] { a: 1 }
 
@@ -109,7 +109,7 @@ Available fields of configuration are listed as follows.
    Specify the naming of log files. 
    For example, if `logname` is specified as "example", log files will be named with an incremental counter:
    "example.0", "example.1", "example.2", ...
-   Default: (Use date-formated string "YYYYMMDD.x" to represent today).
+   Default: (Use date-formated string "fslog-YYYYMMDD.x" to represent today).
 
 ## Contributors
 Bo-Han Wu (researchgary@gmail.com)
