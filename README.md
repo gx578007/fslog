@@ -54,6 +54,9 @@ A simple example to use `fslog.debuglog`.
     // Do log messages only when environment variable `NODE_DEBUG` contains `example`. 
     fslog.debuglog(str,num,arr,obj);
 ```
+<br>
+___
+<br>
 
 # API
 ## log
@@ -67,6 +70,10 @@ A simple example to use `fslog.debuglog`.
 
 ## destroy
    This will destroy automatical log removal processes.
+
+<br>
+___
+<br>
 
 ## Configurations 
 
@@ -120,6 +127,8 @@ Available fields of configuration are listed as follows.
    "example.0", "example.1", "example.2", ...
    Otherwise, date-formatted names "fslog-YYYYMMDD.x" ("fslog-" is prefix) are applied to write logs day by day. 
    <br>Default: (Use date-formatted string "fslog-YYYYMMDD.x" for ).
+
+<br>
 
 ## Contributors
 Bo-Han Wu (researchgary@gmail.com)
