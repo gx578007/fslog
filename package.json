@@ -1,6 +1,6 @@
 {
   "name": "fslog",
-  "version": "0.8.10",
+  "version": "0.8.11",
   "description": "a light node.js logging API",
   "main": "fslog.js",
   "scripts": {

@@ -21,9 +21,7 @@ function fslog(options){
   this.debuglog = debuglog;
   this.destroy = destroy;
 
-  var _now = _nowAlignToDay();
   var _cnt = 0;
-  var _fileMapping = {};
 
   var _oneday = 1000*60*60*24;
   var _onehour = 1000*60*60;
@@ -39,7 +37,7 @@ function fslog(options){
   var _retentionCheckInterval = options.retentionCheckInterval || _oneday; 
   var _retentionGranularity = (options.retentionGranularity || '1d');
   var _logname = options.logname || '%DATE';
-  var _logdir = options.logdir || '';
+  var _logdir = options.logdir || 'fslog';
   var _withtime = options.withtime || false;
   var _destination = (options.destination || 'both').toLowerCase();
 
@@ -51,12 +49,14 @@ function fslog(options){
   var _console = (_destination==='both' || _destination==='console') ? console : {log:noop,error:noop}; 
 
   var _retentionGranularityInEpoch = _granularityToEpoch(_retentionGranularity);
+  var _logFilter = (_logname==='%DATE') ? (new RegExp(/^fslog-.*/)) : (new RegExp('^'+_logFilter+'.*')); 
 
   var _cleanHdl = null;
+  _mkdirpSync(_logdir);
   if (_retentionCheck){
      _cleanHdl = setInterval(function(){
-       _removeOutdatedLogs();
-     },_retentionCheckInterval);
+       _removeExpiredLogs();
+     },_retentionCheckInterval*_oneminute);
   }
 
   function log(){
@@ -93,30 +93,26 @@ function fslog(options){
      return rst;
   }
 
-  function _removeOutdatedLogs(){
+  function _removeExpiredLogs(){
     var now = Date.now();
-    var tsarr = Object.keys(_fileMapping);
-    tsarr.forEach(function(ts,i,arr){
-      if (now-ts>_retentionMinutes*60*1000){
-        fs.unlink(_fileMapping[ts],function(err){
-          if (err) return console.error('[Error] Failed to remove outdated log\n',err);
-        });
-      }
+    fs.readdir(_logdir,function(err,files){
+      if (err) return console.error(err);
+      files.forEach(function(file,idx,arr){
+         if ( !file.match(_logFilter) )
+            return;
+         var completePath = path.join(_logdir,file);
+         console.log(completePath);
+         fs.stat(completePath,function(err,stats){
+            if (err) return console.error(err);
+            var lastModTime = new Date(stats.mtime);
+            if (now-lastModTime>_retentionMinutes*_oneminute*1.2){
+               fs.unlink(completePath,function(err){
+                  if (err) return console.error(err);   
+               });
+            }
+         });
+      });
     });
-  }
-
-  function _nowAlignToDay(){
-    var now = Date.now();
-    return now-now%(_oneday)+_oneday;
-  }
-  function _getCurrentFile(){
-    var now = _nowAlignToDay();
-    var file = _fileMapping[now];
-    if (!file){
-      ++_cnt;
-      _fileMapping[now] = _filename(); 
-    }
-    return _fileMapping[now]; 
   }
   function _filename(){ 
     if (_logname==='%DATE')
@@ -159,6 +155,13 @@ function fslog(options){
   function _twoDigits(input){
      if (input<10) return '0'+input;
      return ''+input;
+  }
+  function _mkdirpSync(dir){
+     fs.stat(dir,function(err,stats){
+       if (err && err.code==='ENOENT')
+          fs.mkdirSync(dir);   
+       else if (err) return console.error(err);
+     }); 
   }
 }
 
