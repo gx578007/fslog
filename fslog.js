@@ -6,6 +6,7 @@ var path = require('path');
  * options: { 
  *   section:'...', 
  *   retentionMinutes: in minutes,
+ *   retentionGranularity: n+('m'|'h'|'d')
  *   retentionCheckInterval: 
  *   retention: true|false
  *   logdir: directory,
@@ -25,26 +26,31 @@ function fslog(options){
   var _fileMapping = {};
 
   var _oneday = 1000*60*60*24;
+  var _onehour = 1000*60*60;
+  var _oneminute = 1000*60;
 
   var noop = function(){};
 
+  // Check configuration
   options = options || {};
   var _section = options.section || null;
   var _retentionCheck = options.retentionCheck || false;
   var _retentionMinutes = options.retentionMinutes || 60*24*7;
   var _retentionCheckInterval = options.retentionCheckInterval || _oneday; 
+  var _retentionGranularity = (options.retentionGranularity || '1d');
   var _logname = options.logname || '%DATE';
   var _logdir = options.logdir || '';
   var _withtime = options.withtime || false;
   var _destination = (options.destination || 'both').toLowerCase();
 
+  // Setup state variables in terms of configuration
   var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_section)>=0;
+  if (_debugMode) this.debuglog = noop; 
 
   var _tofile = (_destination==='both' || _destination==='file') ? fs.appendFile : noop;
   var _console = (_destination==='both' || _destination==='console') ? console : {log:noop,error:noop}; 
 
-  if (_debugMode) this.debuglog = noop; 
-
+  var _retentionGranularityInEpoch = _granularityToEpoch(_retentionGranularity);
 
   var _cleanHdl = null;
   if (_retentionCheck){
@@ -118,12 +124,30 @@ function fslog(options){
     return path.join(_logdir,_logname+'.'+_cnt); 
   }
 
+  function _granularityToEpoch(str){
+    var n = parseInt(str);
+    if (isNaN(n))
+       return _oneday;
+    var unit = str.replace(n,'').trim().toLowerCase();
+    var p = 1000;
+    if (unit==='d') p=n*_oneday;
+    else if (unit==='h') p=n*_onehour;
+    else if (unit==='m') p=n*_oneminute;
+    else p=_oneday;
+    return p;
+  }
+
   function _dateStr(){
-     var cur = new Date();
+     var now = Date.now();
+     var cur = new Date( now-now%_retentionGranularityInEpoch );
      var year = cur.getFullYear();
      var month = _twoDigits(cur.getMonth()+1);
      var day = _twoDigits(cur.getDay());
-     return ''+year+month+day;
+     var rst = ''+year+month+day;
+     if (_retentionGranularityInEpoch>=_oneday) return rst;
+     else if (_retentionGranularityInEpoch>=_onehour) rst += ('-'+_twoDigits(cur.getHours()));
+     else if (_retentionGranularityInEpoch>=_oneminute) rst += ('-'+_twoDigits(cur.getHours())+':'+_twoDigits(cur.getMinutes())); 
+     return rst;
   }
   function _timeStr(){
      var cur = new Date();
