@@ -101,6 +101,7 @@ Available fields of configuration are listed as follows.
 ### "retentionCheck"
    If true, periodically remove expired logs.
    If false, logs will be kept forever.
+<br>Note that, if this is set to **true**, it is possible to remove non-log files in the same directory. Be careful to turn retention checking on with a proper `logdir` to ensure only logs will be removed from file system. 
    <br>Default: **false**.
 
 ### "retentionGranularity"
@@ -118,16 +119,16 @@ Note that the dated-formatted file names depend on the specified granularity. If
 ### "retentionMinutes"
    Specify the lifetime to keep each log. Unit is in "minutes".
    This takes effect when `retention` is set to true.
-   <br>Default: 10080 minutes (7 days).
+   <br>Default: 10080 (minutes) (= 7 days).
 
 ### "retentionCheckInterval"
-   Specify the interval to check expired logs. 
+   Specify the interval in minutes to check expired logs under `logdir`. 
    This takes effect when `retention` is set to true.
-   <br>Default: 1440 minutes (1 day).
+   <br>Default: 1440 (minutes) (= 1 day).
 
 ### "logdir"
-   Specify the directory to put log files.
-   <br>Default: "**./**"
+   Specify the directory to store log files. If the directory does not exist, `fslog` will automatically create the directory. It is strongly suggested to specify your own proper directory to store and manage logs. **DO NOT** put important files (such as source codes) under the specified directory. 
+   <br>Default: "**fslog**"
 
 ### "withtime"
    If it is set to true, a timestamp will be embedded into the head of each log message when logging.
