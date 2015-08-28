@@ -28,11 +28,11 @@ A simple example to use `fslog.log`.
 
 This will display:
 
-    1 '1' [ 1, '2', 3 ] { a: 1 }
+    '1' 1 [ 1, '2', 3 ] { a: 1 }
 
 A log file with date-formatted name will be generated. For example, logs are written to the file "fslog-20150803.0" is generated. Its content will be:
 
-    1 '1' [ 1, '2', 3 ] { a: 1 }
+    '1' 1 [ 1, '2', 3 ] { a: 1 }
 
 A simple example to use `fslog.debuglog`.
 
