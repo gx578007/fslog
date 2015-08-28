@@ -1,7 +1,7 @@
 fslog - a light node.js logging API 
 ===========================
 
-Similar to `console.log`, `fslog` logs message to both "files" and "stdout". The logs within the same day will be written in the same file. Also, `fslog` is able to automatically perform log rotation to remove expired logs (disabled by default).
+Similar to `console.log`, `fslog` logs message to both "files" and "stdout". The logs within the same day will be written in the same file by default. Also, `fslog` is able to automatically perform log rotation to remove expired logs (disabled by default).
 
 Install with:
 
@@ -102,6 +102,18 @@ Available fields of configuration are listed as follows.
    If true, periodically remove expired logs.
    If false, logs will be kept forever.
    <br>Default: **false**.
+
+### "retentionGranularity"
+   Specify the period which all the logs in this time range will be written in the same file.
+   By default, all logs in the same day will be wriiten in the same file.
+   Users can customize this granulariy by the following time units:
+   1. **d**: separated files by days. For example, "2d" means two days and "7d" means one week.
+   2. **h**: separated files by hours. For example, "3h" means three hours and "24h" means one day.
+   3. **m**: separated files by minutes. For example, "10m" means ten minutes and "60m" means one hour.
+   <br>
+ 
+Note that the dated-formatted file names depend on the specified granularity. If the granularity is less than one hour, the corresponding file name will disaply to minute information of logging time. Simiarly, if the granularity is less than one day but more than one hour, the file name shows only hour information but hides minutes. 
+   <br> Default: "1d" (one log file per day)
 
 ### "retentionMinutes"
    Specify the lifetime to keep each log. Unit is in "minutes".
