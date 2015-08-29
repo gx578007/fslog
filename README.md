@@ -139,7 +139,7 @@ Note that the dated-formatted file names depend on the specified granularity. If
    For example, if `logname` is specified as "example", log files will be named with an incremental counter:
    "example.0", "example.1", "example.2", ...
    Otherwise, date-formatted names "fslog-YYYYMMDD-HH:MM.x" ("fslog-" is a prefix) are applied to write logs according to the retention granularity (per day by default). 
-   <br>Default: (Use date-formatted string "fslog-YYYYMMDD-HH:MM.x" for ).
+   <br>Default: (Use date-formatted string "fslog-YYYYMMDD-HH:MM.x").
 
 <br>
 
