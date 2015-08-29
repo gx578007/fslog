@@ -84,12 +84,7 @@ function fslog(options){
   function _generateOutputString(inputs){
      var rst = ''; 
      rst = _withtime ? ('[[' + _timeStr() + ']] ') : '';
-     for (var i=0; i<inputs.length; i++){
-        var arg = inputs[i];
-        var sep = ' ';
-        if (i===inputs.length-1) sep = '';
-        rst += util.inspect(arg)+sep;
-     }
+     rst += util.format.apply(null,inputs);
      return rst;
   }
 

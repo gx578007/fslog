@@ -17,22 +17,23 @@ A simple example to use `fslog.log`.
 
     // Use fslog.log like console.log
     // Use fslog.error like console.error
-    // Not support format specifier (such as %s, %d ...)
+    // Support formatter
     var obj = {a:1};
     var arr = [1,'2',3];
     var num = 1;
     var str = '1'
     fslog.log(str,num,arr,obj);
-    fslog.error(str,num,arr,obj);
+    //fslog.error(str,num,arr,obj);
+    //fslog.error('%s %d %j %j',str,num,arr,obj);
 ```
 
 This will display:
 
-    '1' 1 [ 1, '2', 3 ] { a: 1 }
+    1 1 [ 1, '2', 3 ] { a: 1 }
 
 A log file with date-formatted name will be generated. For example, logs are written to the file "fslog-20150803.0" is generated. Its content will be:
 
-    '1' 1 [ 1, '2', 3 ] { a: 1 }
+    1 1 [ 1, '2', 3 ] { a: 1 }
 
 A simple example to use `fslog.debuglog`.
 
@@ -60,10 +61,10 @@ ___
 
 # API
 ## log
-   Interface is similar to `console.log`. It writes logs to both "files" and "stdout".
+   Interface is similar to `console.log`. This writes logs to both "files" and "stdout".
 
 ## error 
-   Interface is similar to `console.error`. It writes logs to both "files" and "stderr".
+   Interface is similar to `console.error`. This writes logs to both "files" and "stderr".
 
 ## debuglog
    Interface is similar to `util.debuglog`. If environment variable "NODE_DEBUG" matches the specified section, it will write logs to files and stdout. If not, it is a no-op function.
