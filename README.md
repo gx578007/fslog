@@ -61,13 +61,13 @@ ___
 
 # API
 ## log
-   Interface is similar to `console.log`. This writes logs to both "files" and "stdout".
+   Interface is similar to `console.log`. This writes logs to both "files" and "stdout". By default, this function asynchronously returns immediately, which does not wait for that writing process is completed. If synchronous mode is required, users can set `sync` to **true** in configuration. However, synchronous writing may significantly degrade performance.
 
 ## error 
-   Interface is similar to `console.error`. This writes logs to both "files" and "stderr".
+   Interface is similar to `console.error`. This writes logs to both "files" and "stderr". By default, this function asynchronously returns immediately, which does not wait for that writing process is completed. If synchronous mode is required, users can set `sync` to **true** in configuration. However, synchronous writing may significantly degrade performance.
 
 ## debuglog
-   Interface is similar to `util.debuglog`. If environment variable "NODE_DEBUG" matches the specified section, it will write logs to files and stdout. If not, it is a no-op function.
+   Interface is similar to `util.debuglog`. If environment variable "NODE_DEBUG" matches the specified section, it will write logs to files and stdout. If not, it is a no-op function. By default, this function asynchronously returns immediately, which does not wait for that writing process is completed. If synchronous mode is required, users can set `sync` to **true** in configuration. However, synchronous writing may significantly degrade performance.
 
 ## destroy
    This will destroy automatical log removal processes.
@@ -137,10 +137,14 @@ Note that the dated-formatted file names depend on the specified granularity. If
 
 ### "logname"
    Specify the naming of log files. 
-   For example, if `logname` is specified as "example", log files will be named with an incremental counter:
+   For example, if `logname` is specified as "example", log files will be named with an incremental counter (example.x):
    "example.0", "example.1", "example.2", ...
    Otherwise, date-formatted names "fslog-YYYYMMDD-HH:MM.x" ("fslog-" is a prefix) are applied to write logs according to the retention granularity (per day by default). 
    <br>Default: (Use date-formatted string "fslog-YYYYMMDD-HH:MM.x").
+
+### "sync"
+    Specify the writing mode to file system. If this is set to **true**, every log is written to file system synchronously. If this is set to **false**, asynchronous writing is applied.
+    <br>Default: false
 
 <br>
 
