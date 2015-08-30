@@ -22,6 +22,8 @@ function fslog(options){
   this.destroy = destroy;
 
   var _cnt = 0;
+  var _prev_log_period = 0;
+  var _log_status = {};
 
   var _oneday = 1000*60*60*24;
   var _onehour = 1000*60*60;
@@ -48,8 +50,9 @@ function fslog(options){
   var _tofile = (_destination==='both' || _destination==='file') ? fs.appendFile : noop;
   var _console = (_destination==='both' || _destination==='console') ? console : {log:noop,error:noop}; 
 
+  var _dateform = _logname==='%DATE';
   var _retentionGranularityInEpoch = _granularityToEpoch(_retentionGranularity);
-  var _logFilter = (_logname==='%DATE') ? (new RegExp(/^fslog-.*/)) : (new RegExp('^'+_logFilter+'.*')); 
+  var _logFilter = (_dateform) ? (new RegExp(/^fslog-.*/)) : (new RegExp('^'+_logname+'.*')); 
 
   var _cleanHdl = null;
   _mkdirpSync(_logdir);
@@ -61,13 +64,13 @@ function fslog(options){
 
   function log(){
      var rst = _generateOutputString(arguments); 
-     _tofile(_filename(),rst+'\n',function(err){ if (err) console.error(err)} );
+     _tofile(_log_name_status(),rst+'\n',function(err){ if (err) console.error(err)} );
      _console.log.apply(null,[rst]); 
   }
 
   function error(){
      var rst = _generateOutputString(arguments); 
-     _tofile(_filename(),rst+'\n',function(err){ if (err) console.error(err)} );
+     _tofile(_log_name_status(),rst+'\n',function(err){ if (err) console.error(err)} );
      _console.error.apply(null,[rst]); 
   }
 
@@ -96,11 +99,10 @@ function fslog(options){
          if ( !file.match(_logFilter) )
             return;
          var completePath = path.join(_logdir,file);
-         console.log(completePath);
          fs.stat(completePath,function(err,stats){
             if (err) return console.error(err);
             var lastModTime = new Date(stats.mtime);
-            if (now-lastModTime>_retentionMinutes*_oneminute*1.2){
+            if (now-lastModTime>_retentionMinutes*_oneminute+_oneminute*0.1){
                fs.unlink(completePath,function(err){
                   if (err) return console.error(err);   
                });
@@ -109,10 +111,19 @@ function fslog(options){
       });
     });
   }
-  function _filename(){ 
-    if (_logname==='%DATE')
-      return path.join(_logdir,'fslog-'+_dateStr()+'.'+_cnt);
-    return path.join(_logdir,_logname+'.'+_cnt); 
+  function _log_name_status(new_size){ 
+    var this_period = _dateStr();
+    if (this_period!==_prev_log_period){
+       _cnt++;
+       _prev_log_period = this_period;
+    }
+    var fn = (_dateform) ? path.join(_logdir,'fslog-'+this_period+'.'+_cnt) : path.join(_logdir,_logname+'.'+_cnt);
+    /*
+    var stat = _log_status[fn] || {size:0,mtime:Date.now()};
+    stat.size += new_size;
+    stat.mtime = Date.now();
+    */
+    return fn; 
   }
 
   function _granularityToEpoch(str){
