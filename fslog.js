@@ -38,6 +38,7 @@ function fslog(options){
   var _retentionMinutes = options.retentionMinutes || 60*24*7;
   var _retentionCheckInterval = options.retentionCheckInterval || _oneday; 
   var _retentionGranularity = (options.retentionGranularity || '1d');
+  var _sync = options.sync || false;
   var _logname = options.logname || '%DATE';
   var _logdir = options.logdir || 'fslog';
   var _withtime = options.withtime || false;
@@ -46,8 +47,13 @@ function fslog(options){
   // Setup state variables in terms of configuration
   var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_section)>=0;
   if (_debugMode) this.debuglog = noop; 
-
-  var _tofile = (_destination==='both' || _destination==='file') ? fs.appendFile : noop;
+  
+  var _tofile = (_destination==='both' || _destination==='file') 
+                ? ( _sync===true 
+                     ? function(f,d,cb){ fs.appendFileSync(f,d); }
+                     : fs.appendFile
+                  ) 
+                : noop;
   var _console = (_destination==='both' || _destination==='console') ? console : {log:noop,error:noop}; 
 
   var _dateform = _logname==='%DATE';
