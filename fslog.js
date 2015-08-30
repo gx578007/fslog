@@ -21,7 +21,7 @@ function fslog(options){
   this.debuglog = debuglog;
   this.destroy = destroy;
 
-  var _cnt = 0;
+  var _cnt = -1;
   var _prev_log_period = 0;
   var _log_status = {};
 
