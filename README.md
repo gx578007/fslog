@@ -141,10 +141,10 @@ Note that the dated-formatted file names depend on the specified granularity. If
    "example.0", "example.1", "example.2", ...
    Otherwise, date-formatted names "fslog-YYYYMMDD-HH:MM.x" ("fslog-" is a prefix) are applied to write logs according to the retention granularity (per day by default). 
    <br>Default: (Use date-formatted string "fslog-YYYYMMDD-HH:MM.x").
-
+   
 ### "sync"
-    Specify the writing mode to file system. If this is set to **true**, every log is written to file system synchronously. If this is set to **false**, asynchronous writing is applied.
-    <br>Default: false
+   Specify the writing mode to file system. If this is set to **true**, every log is written to file system synchronously. If this is set to **false**, asynchronous writing is applied.
+   <br>Default: false.
 
 <br>
 
