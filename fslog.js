@@ -46,7 +46,7 @@ function fslog(options){
 
   // Setup state variables in terms of configuration
   var _debugMode = process.env.NODE_DEBUG && process.env.NODE_DEBUG.indexOf(_section)>=0;
-  if (_debugMode) this.debuglog = noop; 
+  if (!_debugMode) this.debuglog = noop; 
   
   var _tofile = (_destination==='both' || _destination==='file') 
                 ? ( _sync===true 
