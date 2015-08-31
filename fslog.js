@@ -169,11 +169,13 @@ function fslog(options){
      return ''+input;
   }
   function _mkdirpSync(dir){
-     fs.stat(dir,function(err,stats){
+     try{ 
+        var stats = fs.statSync(dir);
+     }catch (err){
        if (err && err.code==='ENOENT')
           fs.mkdirSync(dir);   
-       else if (err) return console.error(err);
-     }); 
+       else console.error(err);
+     }
   }
 }
 
