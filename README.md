@@ -1,7 +1,7 @@
 fslog - a light node.js logging API 
 ===========================
 
-Similar to `console.log`, `fslog` logs message to both "files" and "stdout". The logs within the same day will be written in the same file by default. Also, `fslog` is able to automatically perform log rotation to remove expired logs (disabled by default).
+Similar to `console.log`, `fslog` logs message to both "files" and "stdout". The logs within the same day will be written in the same file by default. Also, `fslog` is able to automatically perform log rotation or remove expired logs (disabled by default).
 
 Install with:
 
@@ -47,6 +47,7 @@ A simple example to use `fslog.debuglog`.
       section: 'example',
       retentionCheck: true, 
       retentionMinutes: 60*24*7,
+      retentionRotationNum: 7,
       logdir: 'logs',
       logname: 'exampleLog'
     });
@@ -99,10 +100,30 @@ Available fields of configuration are listed as follows.
 
 <br>Default: "*both*"
 
+### "logdir"
+   Specify the directory to store log files. If the directory does not exist, `fslog` will automatically create the directory. It is strongly suggested to specify your own proper directory to store and manage logs. **DO NOT** put important files (such as source codes) under the specified directory. 
+   <br>Default: "**fslog**"
+
+### "logname"
+   Specify the naming of log files. 
+   For example, if `logname` is specified as "example", log files will be named with an incremental counter (example.x):
+   "example.0", "example.1", "example.2", ...
+   Otherwise, date-formatted names "fslog-YYYYMMDD-HH:MM.x" ("fslog-" is a prefix) are applied to write logs according to the retention granularity (per day by default). 
+   <br>Default: (Use date-formatted string "fslog-YYYYMMDD-HH:MM.x").
+  
+### "withtime"
+   If it is set to true, a timestamp will be embedded into the head of each log message when logging.
+   <br>Default: **false**.  
+   
+### "sync"
+   Specify the writing mode to file system. If this is set to **true**, every log is written to file system synchronously. If this is set to **false**, asynchronous writing is applied.
+   <br>Default: **false**.
+
+## Log Retenton Configuration
+
 ### "retentionCheck"
    If true, periodically remove expired logs.
    If false, logs will be kept forever.
-<br>Note that, if this is set to **true**, it is possible to remove non-log files in the same directory. Be careful to turn retention checking on with a proper `logdir` to ensure only logs will be removed from file system. 
    <br>Default: **false**.
 
 ### "retentionGranularity"
@@ -121,30 +142,30 @@ Note that the dated-formatted file names depend on the specified granularity. If
    Specify the lifetime to keep each log. Unit is in "minutes".
    This takes effect when `retention` is set to true.
    <br>Default: 10080 (minutes) (= 7 days).
+   
+### "retentionRotationNum"
+   Specify the number of logs kept simultaneously.
+   This takes effect when `retention` is set to true.
+   <br>Default: 30
+
+Note: If one of "retentionMinutes" and "retentionRotationNum" constraints violates, the log removing process will be performed to remove invalid logs.
 
 ### "retentionCheckInterval"
    Specify the interval in minutes to check expired logs under `logdir`. 
    This takes effect when `retention` is set to true.
    <br>Default: 1440 (minutes) (= 1 day).
 
-### "logdir"
-   Specify the directory to store log files. If the directory does not exist, `fslog` will automatically create the directory. It is strongly suggested to specify your own proper directory to store and manage logs. **DO NOT** put important files (such as source codes) under the specified directory. 
-   <br>Default: "**fslog**"
-
-### "withtime"
-   If it is set to true, a timestamp will be embedded into the head of each log message when logging.
-   <br>Default: **false**.
-
-### "logname"
-   Specify the naming of log files. 
-   For example, if `logname` is specified as "example", log files will be named with an incremental counter (example.x):
-   "example.0", "example.1", "example.2", ...
-   Otherwise, date-formatted names "fslog-YYYYMMDD-HH:MM.x" ("fslog-" is a prefix) are applied to write logs according to the retention granularity (per day by default). 
-   <br>Default: (Use date-formatted string "fslog-YYYYMMDD-HH:MM.x").
-   
-### "sync"
-   Specify the writing mode to file system. If this is set to **true**, every log is written to file system synchronously. If this is set to **false**, asynchronous writing is applied.
-   <br>Default: **false**.
+## An example of retention configuration: 
+```js
+{
+   retentionCheck: true,
+   retentionGranularity: '12h',
+   retentionMinutes: 60*24*7,
+   retentionRotationNum: 10,
+   retentionCheckInterval: 120
+}
+```
+The above configurations mean that every log file stores 12-hour data. The retention check is turned on and is performed every 120 minutes. Everytime it removes logs 7 days before or the oldest logs when the log number is more than 10.
 
 <br>
 
