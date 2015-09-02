@@ -38,6 +38,7 @@ function fslog(options){
   var _retentionMinutes = options.retentionMinutes || 60*24*7;
   var _retentionCheckInterval = options.retentionCheckInterval || _oneday; 
   var _retentionGranularity = (options.retentionGranularity || '1d');
+  var _retentionRotationNum = (options.retentionRotationNum || 30 );
   var _sync = options.sync || false;
   var _logname = options.logname || '%DATE';
   var _logdir = options.logdir || 'fslog';
@@ -70,13 +71,13 @@ function fslog(options){
 
   function log(){
      var rst = _generateOutputString(arguments); 
-     _tofile(_log_name_status(),rst+'\n',function(err){ if (err) console.error(err)} );
+     _tofile(_log_name_status(rst.length+1),rst+'\n',function(err){ if (err) console.error(err)} );
      _console.log.apply(null,[rst]); 
   }
 
   function error(){
      var rst = _generateOutputString(arguments); 
-     _tofile(_log_name_status(),rst+'\n',function(err){ if (err) console.error(err)} );
+     _tofile(_log_name_status(rst.length+1),rst+'\n',function(err){ if (err) console.error(err)} );
      _console.error.apply(null,[rst]); 
   }
 
@@ -98,7 +99,6 @@ function fslog(options){
   }
 
   function _removeExpiredLogs(){
-    var now = Date.now();
     fs.readdir(_logdir,function(err,files){
       if (err) return console.error(err);
       files.forEach(function(file,idx,arr){
@@ -108,7 +108,10 @@ function fslog(options){
          fs.stat(completePath,function(err,stats){
             if (err) return console.error(err);
             var lastModTime = new Date(stats.mtime);
-            if (now-lastModTime>_retentionMinutes*_oneminute+_oneminute*0.1){
+            if ( 
+                  _shouldBeRemovedForExpiration(completePath,stats) ||
+                  _shouldBeRemovedForRotation(completePath)
+               ){
                fs.unlink(completePath,function(err){
                   if (err) return console.error(err);   
                });
@@ -117,18 +120,43 @@ function fslog(options){
       });
     });
   }
+  
+  function _shouldBeRemovedForRotation(fn){
+      var stat = _log_status[fn];
+      if (!stat) // other files
+         return false;
+      if (_cnt-stat[0]>=_retentionRotationNum){
+         delete _log_status[fn];
+         return true;
+      }
+      return false;
+  }
+  function _shouldBeRemovedForExpiration(fn,stats){
+     if (!_log_status[fn]) //other files
+        return false;
+     var lastModTime = new Date(stats.mtime);
+     var now = Date.now();
+     if (now-lastModTime>_retentionMinutes*_oneminute+_oneminute*0.1){
+        delete _log_status[fn];
+        return true;
+     }
+     return false;
+  }
+
   function _log_name_status(new_size){ 
     var this_period = _dateStr();
+    var fn = '';
     if (this_period!==_prev_log_period){
-       _cnt++;
+       _cnt++; // do this first
        _prev_log_period = this_period;
+       fn = (_dateform) ? path.join(_logdir,'fslog-'+this_period+'.'+_cnt) 
+                        : path.join(_logdir,_logname+'.'+_cnt);
+       _log_status[fn] = [_cnt,new_size]
+    }else{
+       fn = (_dateform) ? path.join(_logdir,'fslog-'+this_period+'.'+_cnt) 
+                        : path.join(_logdir,_logname+'.'+_cnt);
+       _log_status[fn][1] += new_size;
     }
-    var fn = (_dateform) ? path.join(_logdir,'fslog-'+this_period+'.'+_cnt) : path.join(_logdir,_logname+'.'+_cnt);
-    /*
-    var stat = _log_status[fn] || {size:0,mtime:Date.now()};
-    stat.size += new_size;
-    stat.mtime = Date.now();
-    */
     return fn; 
   }
 
