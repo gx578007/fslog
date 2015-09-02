@@ -155,7 +155,7 @@ Note: If one of "retentionMinutes" and "retentionRotationNum" constraints violat
    This takes effect when `retention` is set to true.
    <br>Default: 1440 (minutes) (= 1 day).
 
-## An example of retention configuration: 
+### An example of retention configuration: 
 ```js
 {
    retentionCheck: true,
